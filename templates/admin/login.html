@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BurgerHouse | Admin Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              orange: '#FF6B00',
+              orangeLight: '#FF8C38',
+              dark: '#12151C',
+              darker: '#0D0F16',
+              card: '#1A1E2A',
+              border: '#252A38',
+              muted: '#8892A4',
+            }
+          },
+          fontFamily: {
+            sans: ['Nunito', 'sans-serif'],
+          },
+          animation: {
+            'float': 'float 6s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 2s ease-in-out infinite',
+            'slide-up': 'slideUp 0.6s ease-out forwards',
+            'fade-in': 'fadeIn 0.8s ease-out forwards',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { boxShadow: '0 0 20px rgba(255,107,0,0.3)' },
+              '50%': { boxShadow: '0 0 40px rgba(255,107,0,0.6)' },
+            },
+            slideUp: {
+              from: { opacity: '0', transform: 'translateY(30px)' },
+              to: { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeIn: {
+              from: { opacity: '0' },
+              to: { opacity: '1' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #12151C; font-family: 'Nunito', sans-serif; }
+
+    .noise-bg::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .input-field {
+      background: #1A1E2A;
+      border: 1.5px solid #252A38;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #FF6B00;
+      box-shadow: 0 0 0 3px rgba(255,107,0,0.15);
+      background: #1F2334;
+    }
+    .input-field::placeholder { color: #4A5568; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #FF6B00, #FF8C38);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, #FF8C38, #FFB066);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .btn-primary:hover::after { opacity: 1; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255,107,0,0.4); }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-primary span { position: relative; z-index: 1; }
+
+    .card-glass {
+      background: rgba(26, 30, 42, 0.85);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(37, 42, 56, 0.8);
+    }
+
+    .divider::before, .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #252A38);
+    }
+    .divider::after { background: linear-gradient(to left, transparent, #252A38); }
+
+    .checkbox-custom:checked {
+      background-color: #FF6B00;
+      border-color: #FF6B00;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-slide-up { animation: slideUp 0.6s ease-out forwards; }
+    .delay-100 { animation-delay: 0.1s; opacity: 0; }
+    .delay-200 { animation-delay: 0.2s; opacity: 0; }
+    .delay-300 { animation-delay: 0.3s; opacity: 0; }
+    .delay-400 { animation-delay: 0.4s; opacity: 0; }
+  </style>
+</head>
+<body class="noise-bg min-h-screen flex items-center justify-center relative overflow-hidden px-4">
+
+  <!-- Background glow orbs -->
+  <div class="glow-orb w-96 h-96 bg-orange-500 opacity-10 top-[-100px] right-[-80px]"></div>
+  <div class="glow-orb w-72 h-72 bg-orange-600 opacity-8 bottom-[-60px] left-[-60px]"></div>
+  <div class="glow-orb w-48 h-48 bg-orange-400 opacity-5 top-1/2 left-1/4"></div>
+
+  <!-- Left decorative panel (hidden on mobile) -->
+  <div class="hidden lg:flex flex-col justify-between w-[420px] min-h-[580px] mr-10 animate-slide-up">
+    <div>
+      <div class="flex items-center gap-3 mb-10">
+        <div class="w-12 h-12 rounded-xl bg-brand-orange flex items-center justify-center animate-pulse-glow">
+          <i class="fa-solid fa-burger text-white text-xl"></i>
+        </div>
+        <div>
+          <span class="text-white font-black text-2xl">Burger</span><span class="text-brand-orange font-black text-2xl">House</span>
+          <p class="text-brand-muted text-xs font-semibold tracking-widest uppercase">Admin Panel</p>
+        </div>
+      </div>
+
+      <h1 class="text-white font-black text-4xl leading-tight mb-4">
+        Boshqaruv<br/>
+        <span class="text-brand-orange">Markaziga</span><br/>
+        Xush Kelibsiz
+      </h1>
+      <p class="text-brand-muted text-sm leading-relaxed">
+        Buyurtmalar, menyu va foydalanuvchilarni boshqarish uchun tizimga kiring.
+      </p>
+    </div>
+
+    <!-- Stats row -->
+    <div class="grid grid-cols-3 gap-3 mt-10">
+      <div class="bg-brand-card rounded-2xl p-4 border border-brand-border">
+        <i class="fa-solid fa-chart-line text-brand-orange mb-2 text-lg"></i>
+        <p class="text-white font-bold text-xl">1.2K</p>
+        <p class="text-brand-muted text-xs">Buyurtmalar</p>
+      </div>
+      <div class="bg-brand-card rounded-2xl p-4 border border-brand-border">
+        <i class="fa-solid fa-users text-brand-orange mb-2 text-lg"></i>
+        <p class="text-white font-bold text-xl">340</p>
+        <p class="text-brand-muted text-xs">Foydalanuvchi</p>
+      </div>
+      <div class="bg-brand-card rounded-2xl p-4 border border-brand-border">
+        <i class="fa-solid fa-utensils text-brand-orange mb-2 text-lg"></i>
+        <p class="text-white font-bold text-xl">48</p>
+        <p class="text-brand-muted text-xs">Menyu</p>
+      </div>
+    </div>
+
+    <!-- Floating burger image placeholder -->
+    <div class="mt-8 flex justify-center animate-float">
+      <div class="relative">
+        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-orange-500/20 to-orange-800/10 border border-orange-500/20 flex items-center justify-center">
+          <i class="fa-solid fa-burger text-brand-orange text-6xl opacity-70"></i>
+        </div>
+        <div class="absolute -top-2 -right-2 w-8 h-8 bg-brand-orange rounded-full flex items-center justify-center shadow-lg">
+          <i class="fa-solid fa-fire text-white text-xs"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Login Card -->
+  <div class="card-glass rounded-3xl w-full max-w-md p-8 relative z-10 shadow-2xl animate-slide-up delay-100">
+
+    <!-- Mobile logo -->
+    <div class="flex lg:hidden items-center gap-3 mb-8 justify-center">
+      <div class="w-10 h-10 rounded-xl bg-brand-orange flex items-center justify-center">
+        <i class="fa-solid fa-burger text-white"></i>
+      </div>
+      <span class="text-white font-black text-xl">Burger<span class="text-brand-orange">House</span></span>
+    </div>
+
+    <div class="mb-8 animate-slide-up delay-200">
+      <h2 class="text-white font-black text-2xl mb-1">Tizimga kirish</h2>
+      <p class="text-brand-muted text-sm">Admin hisobingiz ma'lumotlarini kiriting</p>
+    </div>
+
+    <!-- Error message (hidden by default) -->
+    <div id="error-msg" class="hidden mb-5 p-4 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center gap-3">
+      <i class="fa-solid fa-circle-exclamation text-red-400"></i>
+      <p class="text-red-400 text-sm font-semibold">Login yoki parol noto'g'ri!</p>
+    </div>
+
+    <form id="loginForm" method="POST" action="/admin/login/" class="space-y-5">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{{ next|default:'/admin/' }}" />
+
+      <!-- Username -->
+      <div class="animate-slide-up delay-200">
+        <label class="text-brand-muted text-xs font-bold uppercase tracking-wider mb-2 block">
+          <i class="fa-solid fa-user mr-1 text-brand-orange"></i> Foydalanuvchi nomi
+        </label>
+        <div class="relative">
+          <input
+            type="text"
+            name="username"
+            id="username"
+            placeholder="admin"
+            class="input-field w-full rounded-xl px-4 py-3 text-sm font-semibold pl-10"
+            required
+          />
+          <i class="fa-regular fa-user absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted text-sm"></i>
+        </div>
+      </div>
+
+      <!-- Password -->
+      <div class="animate-slide-up delay-300">
+        <label class="text-brand-muted text-xs font-bold uppercase tracking-wider mb-2 block">
+          <i class="fa-solid fa-lock mr-1 text-brand-orange"></i> Parol
+        </label>
+        <div class="relative">
+          <input
+            type="password"
+            name="password"
+            id="password"
+            placeholder="••••••••"
+            class="input-field w-full rounded-xl px-4 py-3 text-sm font-semibold pl-10 pr-12"
+            required
+          />
+          <i class="fa-regular fa-lock absolute left-3 top-1/2 -translate-y-1/2 text-brand-muted text-sm"></i>
+          <button type="button" id="togglePass" class="absolute right-3 top-1/2 -translate-y-1/2 text-brand-muted hover:text-brand-orange transition-colors">
+            <i class="fa-regular fa-eye text-sm" id="eyeIcon"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Remember me & Forgot -->
+      <div class="flex items-center justify-between animate-slide-up delay-300">
+        <label class="flex items-center gap-2 cursor-pointer group">
+          <input type="checkbox" name="remember" class="w-4 h-4 rounded accent-orange-500 cursor-pointer"/>
+          <span class="text-brand-muted text-sm group-hover:text-white transition-colors">Eslab qolish</span>
+        </label>
+        <a href="#" class="text-brand-orange text-sm font-semibold hover:text-brand-orangeLight transition-colors">
+          <i class="fa-solid fa-key mr-1 text-xs"></i>Parolni unutdim
+        </a>
+      </div>
+
+      <!-- Submit button -->
+      <div class="animate-slide-up delay-400 pt-2">
+        <button type="submit" class="btn-primary w-full py-3.5 rounded-xl text-white font-black text-sm tracking-wide">
+          <span class="flex items-center justify-center gap-2">
+            <i class="fa-solid fa-right-to-bracket"></i>
+            Kirish
+          </span>
+        </button>
+      </div>
+    </form>
+
+    <!-- Divider -->
+    <div class="flex items-center gap-3 my-6 divider animate-slide-up delay-400">
+      <span class="text-brand-muted text-xs font-semibold px-2">yoki</span>
+    </div>
+
+    <!-- Quick access chips -->
+    <div class="grid grid-cols-2 gap-3 animate-slide-up delay-400">
+      <button class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-brand-border bg-brand-card hover:border-brand-orange/40 transition-all group">
+        <i class="fa-brands fa-google text-brand-muted group-hover:text-brand-orange transition-colors text-sm"></i>
+        <span class="text-brand-muted group-hover:text-white transition-colors text-xs font-bold">Google</span>
+      </button>
+      <button class="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl border border-brand-border bg-brand-card hover:border-brand-orange/40 transition-all group">
+        <i class="fa-brands fa-telegram text-brand-muted group-hover:text-brand-orange transition-colors text-sm"></i>
+        <span class="text-brand-muted group-hover:text-white transition-colors text-xs font-bold">Telegram</span>
+      </button>
+    </div>
+
+    <!-- Footer -->
+    <p class="text-center text-brand-muted text-xs mt-8 animate-slide-up delay-400">
+      <i class="fa-solid fa-shield-halved text-brand-orange mr-1"></i>
+      Xavfsiz SSL ulanish orqali himoyalangan
+    </p>
+  </div>
+
+  <script>
+    // Toggle password visibility
+    const togglePass = document.getElementById('togglePass');
+    const passwordInput = document.getElementById('password');
+    const eyeIcon = document.getElementById('eyeIcon');
+
+    togglePass.addEventListener('click', () => {
+      const isHidden = passwordInput.type === 'password';
+      passwordInput.type = isHidden ? 'text' : 'password';
+      eyeIcon.className = isHidden ? 'fa-regular fa-eye-slash text-sm' : 'fa-regular fa-eye text-sm';
+    });
+
+    // Form submit - Django handles actual authentication via POST
+    const form = document.getElementById('loginForm');
+    form.addEventListener('submit', function(e) {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      if (!username || !password) {
+        e.preventDefault();
+        document.getElementById('error-msg').classList.remove('hidden');
+      }
+      // If fields are filled, form submits normally via POST to Django
+    });
+  </script>
+</body>
+</html>

@@ -16,14 +16,9 @@
     <!-- Hero Section -->
     {% include 'components/_hero.html' %}
 
-    <!-- Categories -->
-    {% include 'components/_categories.html' %}
-
-    <!-- Menu / Products -->
-    {% include 'components/_menu.html' %}
-
-    <!-- App Promo -->
-    {% include 'components/_add.html' %}
+    {% block main %}
+    Hello World
+    {% endblock main %}
 
     <!-- Footer -->
     {% include 'leyout/footer.html' %}

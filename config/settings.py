@@ -125,5 +125,9 @@ STATICFILES_DIRS = [
     BASE_DIR / 'staticfiles'
 ]
 
+
+LOGIN_REDIRECT_URL = '/admin/'
+LOGOUT_REDIRECT_URL = '/admin/login/'
+
 MEDIA_ROOT = BASE_DIR / 'media'
 MEDIA_URL = '/media/'
